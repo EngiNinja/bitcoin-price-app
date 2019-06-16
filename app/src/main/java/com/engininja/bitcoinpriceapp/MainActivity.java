@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +17,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private TextView tvPrice;
     private TextView tvPriceChange;
-    Retrofit retrofit;
-    String secretKey = "Mjg5YjE5YmU2NjliNDBhNzlhYjhmZTk5NjAwNmFlZmZmZDFhY2ZiNWM3Njc0YmRlOWVmYTk3MjM5Zjc2YmEyYg";
-    String publicKey = "YzI4MzFkYjJmMWI1NDRhYThhMzNhYjE3NWI4YjEyYjA";
+    private Retrofit retrofit;
+    private String secretKey = "Mjg5YjE5YmU2NjliNDBhNzlhYjhmZTk5NjAwNmFlZmZmZDFhY2ZiNWM3Njc0YmRlOWVmYTk3MjM5Zjc2YmEyYg";
+    private String publicKey = "YzI4MzFkYjJmMWI1NDRhYThhMzNhYjE3NWI4YjEyYjA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +33,12 @@ public class MainActivity extends AppCompatActivity {
         tvPrice = findViewById(R.id.tvPrice);
         tvPriceChange = findViewById(R.id.tvPriceChange);
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://apiv2.bitcoinaverage.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        retrofit = ((MyApplication) this.getApplication()).getRetrofit();
+
+        TickerViewModel tickerViewModel = ViewModelProviders.of(this).get(TickerViewModel.class);
+        tickerViewModel.setRetrofit(retrofit);
+
+        tickerViewModel.getTickerBtcUsdMutableLiveData().observe(this, this::handleResponse);
 
         runTicker();
     }
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<TickerBtcUsd> call, Response<TickerBtcUsd> response) {
                                     if (!response.isSuccessful()) {
-                                       Log.e("Ticker Request","Code: " + response.code());
+                                        Log.e("Ticker Request", "Code: " + response.code());
                                         return;
                                     }
 
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         });
+                        // FIXME
                         Thread.sleep(1000);
                     }
                 } catch (InterruptedException e) {
