@@ -2,6 +2,13 @@ package com.engininja.bitcoinpriceapp;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import org.joda.time.DateTime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 class HistoricalDataEntry implements Parcelable {
     private String time;
@@ -26,7 +33,7 @@ class HistoricalDataEntry implements Parcelable {
     };
 
     public String getTime() {
-        return time;
+        return formatTime(time);
     }
 
     public double getAverage() {
@@ -42,5 +49,22 @@ class HistoricalDataEntry implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(time);
         dest.writeDouble(average);
+    }
+
+    /**
+     * https://stackoverflow.com/questions/2201925/converting-iso-8601-compliant-string-to-java-util-date
+     */
+    private String formatTime(String input) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = formatter.parse(input);
+            DateTime dateTime = new DateTime(date);
+            int hour = dateTime.hourOfDay().get();
+            return (hour < 10 ? "0" + hour : hour) + ":" + dateTime.minuteOfHour().get();
+        } catch (ParseException e) {
+            Log.e("Time parsing error", e.getMessage());
+            return input;
+        }
     }
 }
