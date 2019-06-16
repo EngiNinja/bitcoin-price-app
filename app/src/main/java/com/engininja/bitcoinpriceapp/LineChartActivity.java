@@ -71,24 +71,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         return new MinAndMaxEntries(minEntry, maxEntry);
     }
 
-    class MinAndMaxEntries {
-        HistoricalDataEntry minEntry;
-        HistoricalDataEntry maxEntry;
-
-        public MinAndMaxEntries(HistoricalDataEntry minEntry, HistoricalDataEntry maxEntry) {
-            this.minEntry = minEntry;
-            this.maxEntry = maxEntry;
-        }
-
-        public HistoricalDataEntry getMinEntry() {
-            return minEntry;
-        }
-
-        public HistoricalDataEntry getMaxEntry() {
-            return maxEntry;
-        }
-    }
-
     /**
      * @param historicalValues
      */
@@ -133,6 +115,11 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
 
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f);
+
+            String[] xData = extractTimeFromHistoricalData(historicalValues);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            xAxis.setValueFormatter(new MyXAxisValueFormatter(xData));
         }
 
         YAxis yAxis;
@@ -144,9 +131,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
 
             // horizontal grid lines
             yAxis.enableGridDashedLine(10f, 10f, 0f);
-
-            // TODO set x values
-
         }
 
         {
@@ -177,8 +161,21 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         ArrayList<Entry> output = new ArrayList<>();
         for (int i = 0; i < historicalValues.size(); i++) {
             // TODO unsafe conversion?
+
             output.add(new Entry(i, (float) historicalValues.get(i).getAverage(), getResources()
                     .getDrawable(R.drawable.star)));
+        }
+
+        return output;
+    }
+
+    public String[] extractTimeFromHistoricalData(ArrayList<HistoricalDataEntry>
+                                                          historicalValues) {
+
+        int historicalValuesSize = historicalValues.size();
+        String[] output = new String[historicalValuesSize];
+        for (int i = 0; i < historicalValuesSize; i++) {
+            output[i] = (historicalValues.get(i).getTime());
         }
         return output;
     }
@@ -210,7 +207,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             lineDataSet.setDrawCircles(false);
 
             lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-
 
             // black lines and points
             lineDataSet.setColor(Color.BLACK);
@@ -258,7 +254,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         }
     }
 
-
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         Log.i("Entry selected", e.toString());
@@ -272,5 +267,23 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
     @Override
     public void onNothingSelected() {
         Log.i("Nothing selected", "Nothing selected.");
+    }
+
+    class MinAndMaxEntries {
+        HistoricalDataEntry minEntry;
+        HistoricalDataEntry maxEntry;
+
+        public MinAndMaxEntries(HistoricalDataEntry minEntry, HistoricalDataEntry maxEntry) {
+            this.minEntry = minEntry;
+            this.maxEntry = maxEntry;
+        }
+
+        public HistoricalDataEntry getMinEntry() {
+            return minEntry;
+        }
+
+        public HistoricalDataEntry getMaxEntry() {
+            return maxEntry;
+        }
     }
 }

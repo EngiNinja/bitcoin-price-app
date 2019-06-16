@@ -9,7 +9,6 @@ public interface JsonPlaceholderBitcoinAverageTimeApi {
     @GET("indices/global/ticker/BTCUSD")
     Call<TickerBtcUsd> getCurrentRate();
 
-    //BTCUSD daily
     @GET("indices/global/history/BTCUSD?period=daily&?format=json")
     Call<List<HistoricalDataEntry>> getHistoricalData();
 }

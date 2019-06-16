@@ -5,6 +5,9 @@ import android.app.Application;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * This class is only used as singleton for passing Retrofit.
+ */
 public class MyApplication extends Application {
     private Retrofit retrofit;
 

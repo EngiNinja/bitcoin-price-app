@@ -28,6 +28,9 @@ public class TickerViewModel extends ViewModel {
         this.retrofit = retrofit;
     }
 
+    /**
+     * Sends request every second to get fresh BTCUSD rate.
+     */
     void fetchData() {
         final JsonPlaceholderBitcoinAverageTimeApi jsonPlaceholderBitcoinAverageTimeApi
                 = retrofit.create(JsonPlaceholderBitcoinAverageTimeApi.class);
@@ -53,6 +56,7 @@ public class TickerViewModel extends ViewModel {
                                 Log.e("Ticker Failure", t.getMessage());
                             }
                         });
+                        // FIXME
                         Thread.sleep(1000);
                     }
                 } catch (InterruptedException e) {
@@ -60,7 +64,5 @@ public class TickerViewModel extends ViewModel {
                 }
             }
         }.start();
-
-
     }
 }

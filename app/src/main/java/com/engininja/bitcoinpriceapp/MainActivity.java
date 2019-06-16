@@ -2,7 +2,6 @@ package com.engininja.bitcoinpriceapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvPrice;
     private TextView tvPriceChange;
     private Retrofit retrofit;
-    private String secretKey = "Mjg5YjE5YmU2NjliNDBhNzlhYjhmZTk5NjAwNmFlZmZmZDFhY2ZiNWM3Njc0YmRlOWVmYTk3MjM5Zjc2YmEyYg";
-    private String publicKey = "YzI4MzFkYjJmMWI1NDRhYThhMzNhYjE3NWI4YjEyYjA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
         TickerViewModel tickerViewModel = ViewModelProviders.of(this).get(TickerViewModel.class);
         tickerViewModel.setRetrofit(retrofit);
 
-        tickerViewModel.getTickerBtcUsdMutableLiveData().observe(this, this::handleResponse);
-
+        tickerViewModel.getTickerBtcUsdMutableLiveData().observe(this, this::handleUpdate);
     }
 
     public void showHistoricalData(View v) {
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
                 List<HistoricalDataEntry> responseBody = response.body();
 
-                // only adds every 30th value because api returns around 1680 results
+                // only adds every 15th value because api returns around 1680 results
                 List<HistoricalDataEntry> historicalDataEntries = new ArrayList<>();
                 for (int i = 0; i < responseBody.size(); i++) {
                     if (i % 15 == 0) {
@@ -85,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void handleResponse(TickerBtcUsd ticker) {
+    public void handleUpdate(TickerBtcUsd ticker) {
         tvPrice.setText("" + ticker.getLast() + " USD ");
 
         double dayValueChange = ticker.getDayValueChange();
