@@ -40,46 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         tickerViewModel.getTickerBtcUsdMutableLiveData().observe(this, this::handleResponse);
 
-        runTicker();
-    }
-
-    public void runTicker() {
-        final JsonPlaceholderBitcoinAverageTimeApi jsonPlaceholderBitcoinAverageTimeApi
-                = retrofit.create(JsonPlaceholderBitcoinAverageTimeApi.class);
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        runOnUiThread(() -> {
-                            Call<TickerBtcUsd> call = jsonPlaceholderBitcoinAverageTimeApi.getCurrentRate();
-
-                            call.enqueue(new Callback<TickerBtcUsd>() {
-                                @Override
-                                public void onResponse(Call<TickerBtcUsd> call, Response<TickerBtcUsd> response) {
-                                    if (!response.isSuccessful()) {
-                                        Log.e("Ticker Request", "Code: " + response.code());
-                                        return;
-                                    }
-
-                                    TickerBtcUsd ticker = response.body();
-                                    handleResponse(ticker);
-                                }
-
-                                @Override
-                                public void onFailure(Call<TickerBtcUsd> call, Throwable t) {
-                                    tvPrice.setText(t.getMessage());
-                                }
-                            });
-                        });
-                        // FIXME
-                        Thread.sleep(1000);
-                    }
-                } catch (InterruptedException e) {
-                    Log.e("MainActivity runTicker", e.getMessage());
-                }
-            }
-        }.start();
     }
 
     public void showHistoricalData(View v) {
