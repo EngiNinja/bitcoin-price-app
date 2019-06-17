@@ -1,5 +1,8 @@
 package com.engininja.bitcoinpriceapp;
 
+/**
+ * This class represents the ticker instance as at https://apiv2.bitcoinaverage.com/#price-data.
+ */
 public class TickerBtcUsd {
     private double last;
 

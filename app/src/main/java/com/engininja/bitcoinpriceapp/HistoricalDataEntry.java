@@ -10,6 +10,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * This class represents on entity of the list of changes as at https://apiv2.bitcoinaverage.com/#historical-data.
+ */
 class HistoricalDataEntry implements Parcelable {
     private String time;
 
@@ -52,6 +55,7 @@ class HistoricalDataEntry implements Parcelable {
     }
 
     /**
+     * This method parses the input time and returns a shorter version of it.
      * https://stackoverflow.com/questions/2201925/converting-iso-8601-compliant-string-to-java-util-date
      */
     private String formatTime(String input) {

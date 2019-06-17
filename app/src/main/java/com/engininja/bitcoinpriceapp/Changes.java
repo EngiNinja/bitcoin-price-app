@@ -1,5 +1,8 @@
 package com.engininja.bitcoinpriceapp;
 
+/**
+ * This class represents an instance of price change as at https://apiv2.bitcoinaverage.com/#price-data.
+ */
 public class Changes {
     private Percent percent;
     private Price price;
@@ -12,7 +15,6 @@ public class Changes {
         return price;
     }
 }
-
 
 class Percent {
     private double hour;

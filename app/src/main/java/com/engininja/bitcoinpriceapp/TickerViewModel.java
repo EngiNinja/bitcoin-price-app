@@ -11,6 +11,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+/**
+ * This class fetches and stores data for the ticker in MainActivity.
+ */
 public class TickerViewModel extends ViewModel {
     private final MutableLiveData<TickerBtcUsd> tickerBtcUsdMutableLiveData;
     private Retrofit retrofit;
@@ -29,7 +32,7 @@ public class TickerViewModel extends ViewModel {
     }
 
     /**
-     * Sends request every second to get fresh BTCUSD rate.
+     * Sends request every second to get the fresh BTCUSD rate.
      */
     void fetchData() {
         final JsonPlaceholderBitcoinAverageTimeApi jsonPlaceholderBitcoinAverageTimeApi

@@ -1,5 +1,8 @@
 package com.engininja.bitcoinpriceapp;
 
+/**
+ * This class is responsible for formatting the xAxis values.
+ */
 public class MyXAxisValueFormatter extends com.github.mikephil.charting.formatter.ValueFormatter {
 
     private String[] mValues;
