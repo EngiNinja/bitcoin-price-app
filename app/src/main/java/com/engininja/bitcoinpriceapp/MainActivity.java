@@ -9,18 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
     private TextView tvPrice;
     private TextView tvPriceChange;
-    private Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,57 +23,18 @@ public class MainActivity extends AppCompatActivity {
         tvPrice = findViewById(R.id.tvPrice);
         tvPriceChange = findViewById(R.id.tvPriceChange);
 
-        retrofit = ((MyApplication) this.getApplication()).getRetrofit();
-
         TickerViewModel tickerViewModel = ViewModelProviders.of(this).get(TickerViewModel.class);
+        Retrofit retrofit = ((MyApplication) this.getApplication()).getRetrofit();
         tickerViewModel.setRetrofit(retrofit);
 
         tickerViewModel.getTickerBtcUsdMutableLiveData().observe(this, this::handleUpdate);
     }
 
-    public void showHistoricalData(View v) {
-
-        final JsonPlaceholderBitcoinAverageTimeApi jsonPlaceholderBitcoinAverageTimeApi
-                = retrofit.create(JsonPlaceholderBitcoinAverageTimeApi.class);
-
-        Call<List<HistoricalDataEntry>> call = jsonPlaceholderBitcoinAverageTimeApi.getHistoricalData();
-
-        call.enqueue(new Callback<List<HistoricalDataEntry>>() {
-            @Override
-            public void onResponse(Call<List<HistoricalDataEntry>> call, Response<List<HistoricalDataEntry>> response) {
-                if (!response.isSuccessful()) {
-                    tvPrice.setText("Code: " + response.code());
-                    return;
-                }
-
-                List<HistoricalDataEntry> responseBody = response.body();
-
-                // only adds every 15th value because api returns around 1680 results
-                List<HistoricalDataEntry> historicalDataEntries = new ArrayList<>();
-                for (int i = 0; i < responseBody.size(); i++) {
-                    if (i % 15 == 0) {
-                        historicalDataEntries.add(responseBody.get(i));
-                    }
-                }
-
-                Intent intent = new Intent(MainActivity.this, LineChartActivity.class);
-
-                ArrayList<HistoricalDataEntry> historicalDataEntriesArrayList = new ArrayList<>();
-                historicalDataEntriesArrayList.addAll(historicalDataEntries);
-
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("historicalData", historicalDataEntriesArrayList);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(Call<List<HistoricalDataEntry>> call, Throwable t) {
-                tvPrice.setText(t.getMessage());
-            }
-        });
-    }
-
+    /**
+     * Handles ticker's update.
+     *
+     * @param ticker
+     */
     public void handleUpdate(TickerBtcUsd ticker) {
         tvPrice.setText("" + ticker.getLast() + " USD ");
 
@@ -94,4 +48,14 @@ public class MainActivity extends AppCompatActivity {
         tvPriceChange.setTextColor(color);
         tvPriceChange.setText("$" + dayValueChange + " (" + ticker.getDayPercentChange() + "%)");
     }
+
+    /**
+     * Starts LineChartActivity.
+     * @param v
+     */
+    public void showHistoricalData(View v) {
+        Intent intent = new Intent(MainActivity.this, LineChartActivity.class);
+        startActivity(intent);
+    }
+
 }

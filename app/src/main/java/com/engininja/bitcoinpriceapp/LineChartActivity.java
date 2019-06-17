@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
 
@@ -26,11 +27,12 @@ import com.github.mikephil.charting.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Retrofit;
+
 /**
- * Example of a heavily customized {@link LineChart} with limit lines, custom line shapes, etc.
- *
- * @version 3.1.0
- * @since 1.7.4
+ * This class represents the chart with the historical data.
+ * FIXME this class is yet to be refactored.
+ * Please don't read it.
  */
 public class LineChartActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
@@ -41,9 +43,15 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_linechart);
 
-        Bundle bundle = getIntent().getExtras();
-        ArrayList<HistoricalDataEntry> historicalValues = bundle
-                .getParcelableArrayList("historicalData");
+        LineChartViewModel lineChartViewModel = ViewModelProviders.of(this)
+                .get(LineChartViewModel.class);
+        Retrofit retrofit = ((MyApplication) this.getApplication()).getRetrofit();
+        lineChartViewModel.setRetrofit(retrofit);
+
+        lineChartViewModel.getHistoricalDataEntries().observe(this, this::handleUpdate);
+    }
+
+    void handleUpdate(ArrayList<HistoricalDataEntry> historicalValues) {
         drawChart(historicalValues);
     }
 
@@ -72,6 +80,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
     }
 
     /**
+     * Draws chart.
      * @param historicalValues
      */
     public void drawChart(ArrayList<HistoricalDataEntry> historicalValues) {
@@ -134,7 +143,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         }
 
         {
-            //TODO Refactor Logic {
+            // FIXME separate logic from ui
             //axis range
             MinAndMaxEntries minAndMaxEntries = getMinAndMaxFromEntryList(historicalValues);
 
@@ -156,22 +165,28 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         l.setForm(LegendForm.LINE);
     }
 
+    /**
+     *
+     * @param historicalValues
+     * @return
+     */
     public ArrayList<Entry> extractPricesFromHistoricalData(ArrayList<HistoricalDataEntry>
                                                                     historicalValues) {
         ArrayList<Entry> output = new ArrayList<>();
         for (int i = 0; i < historicalValues.size(); i++) {
-            // TODO unsafe conversion?
-
             output.add(new Entry(i, (float) historicalValues.get(i).getAverage(), getResources()
                     .getDrawable(R.drawable.star)));
         }
-
         return output;
     }
 
+    /**
+     *
+     * @param historicalValues
+     * @return
+     */
     public String[] extractTimeFromHistoricalData(ArrayList<HistoricalDataEntry>
                                                           historicalValues) {
-
         int historicalValuesSize = historicalValues.size();
         String[] output = new String[historicalValuesSize];
         for (int i = 0; i < historicalValuesSize; i++) {
@@ -180,12 +195,14 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         return output;
     }
 
+    /**
+     * Sets the data to the chart.
+     * @param historicalValues
+     */
     private void setData(ArrayList<HistoricalDataEntry> historicalValues) {
-
         List<Entry> historicalPrices = extractPricesFromHistoricalData(historicalValues);
 
         LineDataSet lineDataSet;
-
         if (chart.getData() != null &&
                 chart.getData().getDataSetCount() > 0) {
             lineDataSet = (LineDataSet) chart.getData().getDataSetByIndex(0);
@@ -237,6 +254,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             // set color of filled area
             if (Utils.getSDKInt() >= 18) {
                 // drawables only supported on api level 18 and above
+                // TODO color depending on rate (red - decrease, green - increase)
                 Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
                 lineDataSet.setFillDrawable(drawable);
             } else {
