@@ -1,4 +1,4 @@
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.ui;
 
 /**
  * This class is responsible for formatting the xAxis values.

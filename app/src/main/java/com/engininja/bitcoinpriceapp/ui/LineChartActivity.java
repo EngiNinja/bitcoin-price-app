@@ -1,4 +1,4 @@
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.ui;
 
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -11,6 +11,10 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
 
+import com.engininja.bitcoinpriceapp.common.HistoricalDataEntry;
+import com.engininja.bitcoinpriceapp.model.LineChartViewModel;
+import com.engininja.bitcoinpriceapp.common.MyApplication;
+import com.engininja.bitcoinpriceapp.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.Legend.LegendForm;
@@ -81,6 +85,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
 
     /**
      * Draws chart.
+     *
      * @param historicalValues
      */
     public void drawChart(ArrayList<HistoricalDataEntry> historicalValues) {
@@ -166,7 +171,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
     }
 
     /**
-     *
      * @param historicalValues
      * @return
      */
@@ -181,7 +185,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
     }
 
     /**
-     *
      * @param historicalValues
      * @return
      */
@@ -197,6 +200,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
 
     /**
      * Sets the data to the chart.
+     *
      * @param historicalValues
      */
     private void setData(ArrayList<HistoricalDataEntry> historicalValues) {

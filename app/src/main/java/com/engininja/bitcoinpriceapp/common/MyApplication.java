@@ -1,4 +1,4 @@
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.common;
 
 import android.app.Application;
 

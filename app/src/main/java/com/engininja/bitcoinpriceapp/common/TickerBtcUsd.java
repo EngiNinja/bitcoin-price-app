@@ -1,4 +1,4 @@
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.common;
 
 /**
  * This class represents the ticker instance as at https://apiv2.bitcoinaverage.com/#price-data.

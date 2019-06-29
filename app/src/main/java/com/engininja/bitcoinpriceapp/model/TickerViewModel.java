@@ -1,10 +1,13 @@
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.model;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.engininja.bitcoinpriceapp.webservice.JsonPlaceholderBitcoinAverageTimeApi;
+import com.engininja.bitcoinpriceapp.common.TickerBtcUsd;
 
 import retrofit2.Call;
 import retrofit2.Callback;

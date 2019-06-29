@@ -1,4 +1,4 @@
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.engininja.bitcoinpriceapp.common.MyApplication;
+import com.engininja.bitcoinpriceapp.R;
+import com.engininja.bitcoinpriceapp.common.TickerBtcUsd;
+import com.engininja.bitcoinpriceapp.model.TickerViewModel;
 
 import retrofit2.Retrofit;
 

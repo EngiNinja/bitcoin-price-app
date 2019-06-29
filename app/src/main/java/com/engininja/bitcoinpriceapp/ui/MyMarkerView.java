@@ -1,10 +1,11 @@
 
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.TextView;
 
+import com.engininja.bitcoinpriceapp.R;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;

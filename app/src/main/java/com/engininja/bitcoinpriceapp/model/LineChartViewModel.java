@@ -1,10 +1,13 @@
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.model;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.engininja.bitcoinpriceapp.common.HistoricalDataEntry;
+import com.engininja.bitcoinpriceapp.webservice.JsonPlaceholderBitcoinAverageTimeApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +38,7 @@ public class LineChartViewModel extends ViewModel {
     }
 
     /**
-     * fetches data and saves it in historicalDataEntries.
+     * Fetches data and saves it in historicalDataEntries.
      */
     void fetchData() {
         final JsonPlaceholderBitcoinAverageTimeApi jsonPlaceholderBitcoinAverageTimeApi

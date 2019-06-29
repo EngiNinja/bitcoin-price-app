@@ -1,4 +1,4 @@
-package com.engininja.bitcoinpriceapp;
+package com.engininja.bitcoinpriceapp.common;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,9 +13,8 @@ import java.util.Date;
 /**
  * This class represents on entity of the list of changes as at https://apiv2.bitcoinaverage.com/#historical-data.
  */
-class HistoricalDataEntry implements Parcelable {
+public class HistoricalDataEntry implements Parcelable {
     private String time;
-
     private double average;
 
     protected HistoricalDataEntry(Parcel in) {
@@ -59,7 +58,7 @@ class HistoricalDataEntry implements Parcelable {
      * https://stackoverflow.com/questions/2201925/converting-iso-8601-compliant-string-to-java-util-date
      */
     private String formatTime(String input) {
-
+        // TODO initialize as attribute
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date date = formatter.parse(input);
