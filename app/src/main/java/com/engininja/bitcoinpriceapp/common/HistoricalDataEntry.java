@@ -64,7 +64,9 @@ public class HistoricalDataEntry implements Parcelable {
             Date date = formatter.parse(input);
             DateTime dateTime = new DateTime(date);
             int hour = dateTime.hourOfDay().get();
-            return (hour < 10 ? "0" + hour : hour) + ":" + dateTime.minuteOfHour().get();
+            int minute = dateTime.minuteOfHour().get();
+
+            return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
         } catch (ParseException e) {
             Log.e("Time parsing error", e.getMessage());
             return input;
