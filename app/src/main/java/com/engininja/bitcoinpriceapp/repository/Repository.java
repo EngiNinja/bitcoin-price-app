@@ -2,6 +2,8 @@ package com.engininja.bitcoinpriceapp.repository;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.engininja.bitcoinpriceapp.common.HistoricalDataEntry;
 import com.engininja.bitcoinpriceapp.common.TickerBtcUsd;
 import com.engininja.bitcoinpriceapp.common.ValueCallback;
@@ -41,7 +43,7 @@ public class Repository {
 
         call.enqueue(new Callback<TickerBtcUsd>() {
             @Override
-            public void onResponse(Call<TickerBtcUsd> call, Response<TickerBtcUsd> response) {
+            public void onResponse(@NonNull Call<TickerBtcUsd> call, @NonNull Response<TickerBtcUsd> response) {
                 if (!response.isSuccessful()) {
                     Log.e("Ticker Request", "Code: " + response.code());
                     return;
@@ -50,18 +52,18 @@ public class Repository {
             }
 
             @Override
-            public void onFailure(Call<TickerBtcUsd> call, Throwable t) {
+            public void onFailure(@NonNull Call<TickerBtcUsd> call, @NonNull Throwable t) {
                 callback.onFailure(t.getMessage());
             }
         });
     }
 
     public void fetchLineChartData(ValueCallback<ArrayList<HistoricalDataEntry>> callback) {
-        Call<List<HistoricalDataEntry>> call = webService.getHistoricalData("BTCUSD","daily", "json");
+        Call<List<HistoricalDataEntry>> call = webService.getHistoricalData("BTCUSD", "daily", "json");
 
         call.enqueue(new Callback<List<HistoricalDataEntry>>() {
             @Override
-            public void onResponse(Call<List<HistoricalDataEntry>> call, Response<List<HistoricalDataEntry>> response) {
+            public void onResponse(@NonNull Call<List<HistoricalDataEntry>> call, @NonNull Response<List<HistoricalDataEntry>> response) {
                 if (!response.isSuccessful()) {
                     Log.e("Line Chart Request", "Code: " + response.code());
                     return;
@@ -70,7 +72,7 @@ public class Repository {
             }
 
             @Override
-            public void onFailure(Call<List<HistoricalDataEntry>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<HistoricalDataEntry>> call,@NonNull Throwable t) {
                 callback.onFailure(t.getMessage());
             }
         });

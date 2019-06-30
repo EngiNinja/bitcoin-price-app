@@ -8,20 +8,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
 
 import com.engininja.bitcoinpriceapp.common.TickerBtcUsd;
 import com.engininja.bitcoinpriceapp.common.ValueCallback;
 import com.engininja.bitcoinpriceapp.repository.Repository;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import retrofit2.Retrofit;
 
 /**
  * This class fetches and stores data for the ticker in MainActivity.
@@ -45,7 +39,7 @@ public class TickerViewModel extends AndroidViewModel {
     /**
      * Starts the ticker. Sends request every second.
      */
-    public void startTicker() {
+    private void startTicker() {
         final Handler handler = new Handler();
         Timer timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {
@@ -71,6 +65,6 @@ public class TickerViewModel extends AndroidViewModel {
                 });
             }
         };
-        timer.schedule(doAsynchronousTask, 0, 1000); //execute in every 50000 ms
+        timer.schedule(doAsynchronousTask, 0, 1000);
     }
 }

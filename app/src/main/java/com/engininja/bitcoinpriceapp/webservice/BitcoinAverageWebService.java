@@ -3,7 +3,6 @@ package com.engininja.bitcoinpriceapp.webservice;
 import com.engininja.bitcoinpriceapp.common.HistoricalDataEntry;
 import com.engininja.bitcoinpriceapp.common.TickerBtcUsd;
 
-
 import java.util.List;
 
 import retrofit2.Call;

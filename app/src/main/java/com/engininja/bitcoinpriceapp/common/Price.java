@@ -1,5 +1,8 @@
 package com.engininja.bitcoinpriceapp.common;
 
+/**
+ * This class represents an instance of price history.
+ */
 public class Price {
     private double hour;
     private double day;

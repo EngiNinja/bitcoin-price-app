@@ -17,7 +17,7 @@ public class HistoricalDataEntry implements Parcelable {
     private String time;
     private double average;
 
-    protected HistoricalDataEntry(Parcel in) {
+    private HistoricalDataEntry(Parcel in) {
         time = in.readString();
         average = in.readDouble();
     }
@@ -59,7 +59,7 @@ public class HistoricalDataEntry implements Parcelable {
      */
     private String formatTime(String input) {
         // TODO initialize as attribute
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date date = formatter.parse(input);
             DateTime dateTime = new DateTime(date);

@@ -301,16 +301,16 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         HistoricalDataEntry minEntry;
         HistoricalDataEntry maxEntry;
 
-        public MinAndMaxEntries(HistoricalDataEntry minEntry, HistoricalDataEntry maxEntry) {
+        MinAndMaxEntries(HistoricalDataEntry minEntry, HistoricalDataEntry maxEntry) {
             this.minEntry = minEntry;
             this.maxEntry = maxEntry;
         }
 
-        public HistoricalDataEntry getMinEntry() {
+        HistoricalDataEntry getMinEntry() {
             return minEntry;
         }
 
-        public HistoricalDataEntry getMaxEntry() {
+        HistoricalDataEntry getMaxEntry() {
             return maxEntry;
         }
     }

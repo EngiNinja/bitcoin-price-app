@@ -39,7 +39,7 @@ public class LineChartViewModel extends AndroidViewModel {
     /**
      * Fetches data and saves it in historicalDataEntries.
      */
-    void fetchData() {
+    private void fetchData() {
         repository.fetchLineChartData(new ValueCallback<ArrayList<HistoricalDataEntry>>() {
             @Override
             public void onSuccess(ArrayList<HistoricalDataEntry> result) {

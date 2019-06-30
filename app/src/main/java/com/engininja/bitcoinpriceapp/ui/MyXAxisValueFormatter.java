@@ -1,7 +1,5 @@
 package com.engininja.bitcoinpriceapp.ui;
 
-import android.util.Log;
-
 /**
  * This class is responsible for formatting the xAxis values.
  */
@@ -22,5 +20,4 @@ public class MyXAxisValueFormatter extends com.github.mikephil.charting.formatte
             return "";
         }
     }
-
 }

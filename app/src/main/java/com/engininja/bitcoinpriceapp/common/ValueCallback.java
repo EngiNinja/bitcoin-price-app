@@ -1,7 +1,7 @@
 package com.engininja.bitcoinpriceapp.common;
 
 /**
- * Async operation callback that delivers a value on success
+ * Async operation callback that delivers a value on success.
  */
 public interface ValueCallback<V> {
     void onSuccess(V value);
