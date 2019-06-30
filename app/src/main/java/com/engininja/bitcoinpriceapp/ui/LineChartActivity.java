@@ -36,7 +36,7 @@ import java.util.List;
  * Please don't read it.
  */
 public class LineChartActivity extends AppCompatActivity implements OnChartValueSelectedListener {
-
+    private boolean growth;
     private LineChart chart;
 
     @Override
@@ -99,13 +99,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             chart.setOnChartValueSelectedListener(this);
             chart.setDrawGridBackground(false);
 
-            // create marker to display box when values are selected
-            MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
-
-            // Set the marker to the chart
-            mv.setChartView(chart);
-            chart.setMarker(mv);
-
             // enable scaling and dragging
             chart.setDragEnabled(true);
             chart.setScaleEnabled(true);
@@ -128,7 +121,15 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
             xAxis.setValueFormatter(new MyXAxisValueFormatter(xData));
+
+            // create marker to display box when values are selected
+            MyMarkerView mv = new MyMarkerView(LineChartActivity.this, R.layout.custom_marker_view, xData);
+
+            // Set the marker to the chart
+            mv.setChartView(chart);
+            chart.setMarker(mv);
         }
+
 
         YAxis yAxis;
         {   // // Y-Axis Style // //
@@ -145,6 +146,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             // FIXME separate logic from ui
             //axis range
             MinAndMaxEntries minAndMaxEntries = getMinAndMaxFromEntryList(historicalValues);
+            initializeGrowth(historicalValues);
 
             yAxis.setAxisMaximum((float) minAndMaxEntries.getMaxEntry().getAverage());
             yAxis.setAxisMinimum((float) minAndMaxEntries.getMinEntry().getAverage());
@@ -162,6 +164,16 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
 
         // draw legend entries as lines
         l.setForm(LegendForm.LINE);
+    }
+
+    /**
+     * Initializes boolean growth value. If the first value bigger than the last
+     * value - the growth will be initialized with false, otherwise - true;
+     *
+     * @param historicalValues
+     */
+    private void initializeGrowth(ArrayList<HistoricalDataEntry> historicalValues) {
+        growth = historicalValues.get(0).getAverage() > historicalValues.get(historicalValues.size() - 1).getAverage() ? false : true;
     }
 
     /**
@@ -187,7 +199,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         int historicalValuesSize = historicalValues.size();
         String[] output = new String[historicalValuesSize];
         for (int i = 0; i < historicalValuesSize; i++) {
-            output[i] = (historicalValues.get(i).getTime());
+            output[i] = (historicalValues.get(historicalValues.size() - 1 - i).getTime());
         }
         return output;
     }
@@ -253,7 +265,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
             if (Utils.getSDKInt() >= 18) {
                 // drawables only supported on api level 18 and above
                 // TODO color depending on rate (red - decrease, green - increase)
-                Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+                Drawable drawable = ContextCompat.getDrawable(this, growth ? R.drawable.fade_green : R.drawable.fade_red);
                 lineDataSet.setFillDrawable(drawable);
             } else {
                 lineDataSet.setFillColor(Color.BLACK);

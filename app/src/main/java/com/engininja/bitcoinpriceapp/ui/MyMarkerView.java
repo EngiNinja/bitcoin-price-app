@@ -3,6 +3,7 @@ package com.engininja.bitcoinpriceapp.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.engininja.bitcoinpriceapp.R;
@@ -20,12 +21,14 @@ import com.github.mikephil.charting.utils.Utils;
  */
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {
-
+    private final String TAG = "MyMarkerView";
+    private final String[] values;
     private final TextView tvContent;
 
-    public MyMarkerView(Context context, int layoutResource) {
+    public MyMarkerView(Context context, int layoutResource, String[] values) {
         super(context, layoutResource);
-        tvContent = findViewById(R.id.tvContent);
+        this.tvContent = findViewById(R.id.tvContent);
+        this.values = values;
     }
 
     // runs every time the MarkerView is redrawn, can be used to update the
@@ -36,7 +39,8 @@ public class MyMarkerView extends MarkerView {
             CandleEntry ce = (CandleEntry) e;
             tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
-            tvContent.setText(Utils.formatNumber(e.getY(), 0, true));
+            tvContent.setText(this.getValueByIndex((int) e.getX()) + " : "
+                    + Utils.formatNumber(e.getY(), 0, true));
         }
         super.refreshContent(e, highlight);
     }
@@ -44,5 +48,14 @@ public class MyMarkerView extends MarkerView {
     @Override
     public MPPointF getOffset() {
         return new MPPointF(-(getWidth() / 2), -getHeight());
+    }
+
+    public String getValueByIndex(int index) {
+        if (index >= 0 && index < values.length) {
+            return values[index];
+        } else {
+            Log.e(TAG, "index " + index + " out of bounds");
+            return "";
+        }
     }
 }
