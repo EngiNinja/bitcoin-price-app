@@ -28,6 +28,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,6 +51,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
     }
 
     void handleUpdate(ArrayList<HistoricalDataEntry> historicalValues) {
+        Collections.reverse(historicalValues);
         drawChart(historicalValues);
     }
 
@@ -199,7 +201,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         int historicalValuesSize = historicalValues.size();
         String[] output = new String[historicalValuesSize];
         for (int i = 0; i < historicalValuesSize; i++) {
-            output[i] = (historicalValues.get(historicalValues.size() - 1 - i).getTime());
+            output[i] = (historicalValues.get(i).getTime());
         }
         return output;
     }

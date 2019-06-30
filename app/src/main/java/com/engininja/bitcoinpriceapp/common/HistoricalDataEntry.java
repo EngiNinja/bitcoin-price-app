@@ -59,14 +59,11 @@ public class HistoricalDataEntry implements Parcelable {
      */
     private String formatTime(String input) {
         // TODO initialize as attribute
-         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date date = formatter.parse(input);
             DateTime dateTime = new DateTime(date);
-            int hour = dateTime.hourOfDay().get();
-            int minute = dateTime.minuteOfHour().get();
-
-            return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
+            return dateTime.toString("MM/dd HH:mm");
         } catch (ParseException e) {
             Log.e("Time parsing error", e.getMessage());
             return input;

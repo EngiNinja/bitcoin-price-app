@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import com.engininja.bitcoinpriceapp.common.HistoricalDataEntry;
 import com.engininja.bitcoinpriceapp.common.TickerBtcUsd;
 import com.engininja.bitcoinpriceapp.common.ValueCallback;
+import com.engininja.bitcoinpriceapp.model.LineChartViewModel;
+import com.engininja.bitcoinpriceapp.model.TickerLiveData;
 import com.engininja.bitcoinpriceapp.webservice.BitcoinAverageWebService;
 
 import java.util.ArrayList;
@@ -38,24 +40,8 @@ public class Repository {
         return instance;
     }
 
-    public void fetchTickerData(ValueCallback<TickerBtcUsd> callback) {
-        Call<TickerBtcUsd> call = webService.getCurrentRate("BTCUSD");
-
-        call.enqueue(new Callback<TickerBtcUsd>() {
-            @Override
-            public void onResponse(@NonNull Call<TickerBtcUsd> call, @NonNull Response<TickerBtcUsd> response) {
-                if (!response.isSuccessful()) {
-                    Log.e("Ticker Request", "Code: " + response.code());
-                    return;
-                }
-                callback.onSuccess(response.body());
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<TickerBtcUsd> call, @NonNull Throwable t) {
-                callback.onFailure(t.getMessage());
-            }
-        });
+    public TickerLiveData fetchTickerData() {
+        return new TickerLiveData(webService);
     }
 
     public void fetchLineChartData(ValueCallback<ArrayList<HistoricalDataEntry>> callback) {
@@ -72,7 +58,7 @@ public class Repository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<HistoricalDataEntry>> call,@NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<HistoricalDataEntry>> call, @NonNull Throwable t) {
                 callback.onFailure(t.getMessage());
             }
         });
