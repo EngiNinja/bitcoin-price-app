@@ -143,7 +143,7 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
         }
 
         {
-            // FIXME separate logic from ui
+            // FIXME separate logic from ui configuration
             //axis range
             MinAndMaxEntries minAndMaxEntries = getMinAndMaxFromEntryList(historicalValues);
             initializeGrowth(historicalValues);
