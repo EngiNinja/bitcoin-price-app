@@ -9,12 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.engininja.bitcoinpriceapp.common.MyApplication;
 import com.engininja.bitcoinpriceapp.R;
 import com.engininja.bitcoinpriceapp.common.TickerBtcUsd;
 import com.engininja.bitcoinpriceapp.model.TickerViewModel;
-
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
     private TextView tvPrice;
@@ -29,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
         tvPriceChange = findViewById(R.id.tvPriceChange);
 
         TickerViewModel tickerViewModel = ViewModelProviders.of(this).get(TickerViewModel.class);
-        Retrofit retrofit = ((MyApplication) this.getApplication()).getRetrofit();
-        tickerViewModel.setRetrofit(retrofit);
-
         tickerViewModel.getTickerBtcUsdMutableLiveData().observe(this, this::handleUpdate);
     }
 
@@ -56,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Starts LineChartActivity.
+     *
      * @param v
      */
     public void showHistoricalData(View v) {

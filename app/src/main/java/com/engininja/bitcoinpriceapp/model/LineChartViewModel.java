@@ -1,31 +1,34 @@
 package com.engininja.bitcoinpriceapp.model;
 
-import android.util.Log;
+import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.engininja.bitcoinpriceapp.common.HistoricalDataEntry;
-import com.engininja.bitcoinpriceapp.webservice.JsonPlaceholderBitcoinAverageTimeApi;
+import com.engininja.bitcoinpriceapp.common.ValueCallback;
+import com.engininja.bitcoinpriceapp.repository.Repository;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * This class fetches and stores data for the LineChart.
  */
-public class LineChartViewModel extends ViewModel {
+public class LineChartViewModel extends AndroidViewModel {
     private final MutableLiveData<ArrayList<HistoricalDataEntry>> historicalDataEntries;
-    private Retrofit retrofit;
+    private Repository repository;
 
-    public LineChartViewModel() {
-        this.historicalDataEntries = new MutableLiveData<>();
+
+    public LineChartViewModel(@NonNull Application application) {
+        super(application);
+        historicalDataEntries = new MutableLiveData<>();
+        this.repository = Repository.getInstance();
+        this.fetchData();
     }
 
     public LiveData<ArrayList<HistoricalDataEntry>> getHistoricalDataEntries() {
@@ -33,42 +36,20 @@ public class LineChartViewModel extends ViewModel {
         return historicalDataEntries;
     }
 
-    public void setRetrofit(Retrofit retrofit) {
-        this.retrofit = retrofit;
-    }
-
     /**
      * Fetches data and saves it in historicalDataEntries.
      */
     void fetchData() {
-        final JsonPlaceholderBitcoinAverageTimeApi jsonPlaceholderBitcoinAverageTimeApi
-                = retrofit.create(JsonPlaceholderBitcoinAverageTimeApi.class);
-
-        Call<List<HistoricalDataEntry>> call = jsonPlaceholderBitcoinAverageTimeApi.getHistoricalData();
-
-        call.enqueue(new Callback<List<HistoricalDataEntry>>() {
+        repository.fetchLineChartData(new ValueCallback<ArrayList<HistoricalDataEntry>>() {
             @Override
-            public void onResponse(Call<List<HistoricalDataEntry>> call, Response<List<HistoricalDataEntry>> response) {
-                if (!response.isSuccessful()) {
-                    Log.e("Line Chart Request", "Code: " + response.code());
-                    return;
-                }
-
-                List<HistoricalDataEntry> responseBody = response.body();
-
-                // only adds every 15th value because api returns around 1680 results
-                ArrayList<HistoricalDataEntry> historicalDataEntries = new ArrayList<>();
-                for (int i = 0; i < responseBody.size(); i++) {
-                    if (i % 15 == 0) {
-                        historicalDataEntries.add(responseBody.get(i));
-                    }
-                }
-                LineChartViewModel.this.historicalDataEntries.setValue(historicalDataEntries);
+            public void onSuccess(ArrayList<HistoricalDataEntry> result) {
+                historicalDataEntries.setValue(result);
             }
 
             @Override
-            public void onFailure(Call<List<HistoricalDataEntry>> call, Throwable t) {
-                Log.e("Ticker Request", "Code: " + t.getMessage());
+            public void onFailure(final String errorMessage) {
+                new Handler(Looper.getMainLooper())
+                        .post(() -> Toast.makeText(getApplication(), errorMessage, Toast.LENGTH_LONG).show());
             }
         });
     }

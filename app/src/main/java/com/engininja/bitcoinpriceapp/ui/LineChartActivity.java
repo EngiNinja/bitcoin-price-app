@@ -12,9 +12,8 @@ import androidx.lifecycle.ViewModelProviders;
 import android.util.Log;
 
 import com.engininja.bitcoinpriceapp.common.HistoricalDataEntry;
-import com.engininja.bitcoinpriceapp.model.LineChartViewModel;
-import com.engininja.bitcoinpriceapp.common.MyApplication;
 import com.engininja.bitcoinpriceapp.R;
+import com.engininja.bitcoinpriceapp.model.LineChartViewModel;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.Legend.LegendForm;
@@ -30,8 +29,6 @@ import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Retrofit;
 
 /**
  * This class represents the chart with the historical data.
@@ -49,9 +46,6 @@ public class LineChartActivity extends AppCompatActivity implements OnChartValue
 
         LineChartViewModel lineChartViewModel = ViewModelProviders.of(this)
                 .get(LineChartViewModel.class);
-        Retrofit retrofit = ((MyApplication) this.getApplication()).getRetrofit();
-        lineChartViewModel.setRetrofit(retrofit);
-
         lineChartViewModel.getHistoricalDataEntries().observe(this, this::handleUpdate);
     }
 

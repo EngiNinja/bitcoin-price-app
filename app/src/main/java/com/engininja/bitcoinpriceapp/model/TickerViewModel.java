@@ -1,74 +1,76 @@
 package com.engininja.bitcoinpriceapp.model;
 
+import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.engininja.bitcoinpriceapp.webservice.JsonPlaceholderBitcoinAverageTimeApi;
 import com.engininja.bitcoinpriceapp.common.TickerBtcUsd;
+import com.engininja.bitcoinpriceapp.common.ValueCallback;
+import com.engininja.bitcoinpriceapp.repository.Repository;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import retrofit2.Retrofit;
 
 /**
  * This class fetches and stores data for the ticker in MainActivity.
  */
-public class TickerViewModel extends ViewModel {
-    private final MutableLiveData<TickerBtcUsd> tickerBtcUsdMutableLiveData;
-    private Retrofit retrofit;
+public class TickerViewModel extends AndroidViewModel {
+    private String TAG = "TickerViewModel";
+    private Repository repository;
+    private MutableLiveData<TickerBtcUsd> tickerBtcUsdMutableLiveData;
 
-    public TickerViewModel() {
-        this.tickerBtcUsdMutableLiveData = new MutableLiveData<>();
+    public TickerViewModel(@NonNull Application application) {
+        super(application);
+        tickerBtcUsdMutableLiveData = new MutableLiveData<>();
+        this.repository = Repository.getInstance();
+        this.startTicker();
     }
 
-    public LiveData<TickerBtcUsd> getTickerBtcUsdMutableLiveData() {
-        fetchData();
+    public MutableLiveData<TickerBtcUsd> getTickerBtcUsdMutableLiveData() {
         return tickerBtcUsdMutableLiveData;
     }
 
-    public void setRetrofit(Retrofit retrofit) {
-        this.retrofit = retrofit;
-    }
-
     /**
-     * Sends request every second to get the fresh BTCUSD rate.
+     * Starts the ticker. Sends request every second.
      */
-    void fetchData() {
-        final JsonPlaceholderBitcoinAverageTimeApi jsonPlaceholderBitcoinAverageTimeApi
-                = retrofit.create(JsonPlaceholderBitcoinAverageTimeApi.class);
-        new Thread() {
+    public void startTicker() {
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {
             @Override
             public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Call<TickerBtcUsd> call = jsonPlaceholderBitcoinAverageTimeApi.getCurrentRate();
-
-                        call.enqueue(new Callback<TickerBtcUsd>() {
+                handler.post(() -> {
+                    try {
+                        repository.fetchTickerData(new ValueCallback<TickerBtcUsd>() {
                             @Override
-                            public void onResponse(Call<TickerBtcUsd> call, Response<TickerBtcUsd> response) {
-                                if (!response.isSuccessful()) {
-                                    Log.e("Ticker Request", "Code: " + response.code());
-                                    return;
-                                }
-                                tickerBtcUsdMutableLiveData.setValue(response.body());
+                            public void onSuccess(TickerBtcUsd result) {
+                                tickerBtcUsdMutableLiveData.setValue(result);
                             }
 
                             @Override
-                            public void onFailure(Call<TickerBtcUsd> call, Throwable t) {
-                                Log.e("Ticker Failure", t.getMessage());
+                            public void onFailure(String errorMessage) {
+                                new Handler(Looper.getMainLooper())
+                                        .post(() -> Toast.makeText(getApplication(), errorMessage, Toast.LENGTH_LONG).show());
                             }
                         });
-                        // FIXME
-                        Thread.sleep(1000);
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
                     }
-                } catch (InterruptedException e) {
-                    Log.e("MainActivity runTicker", e.getMessage());
-                }
+                });
             }
-        }.start();
+        };
+        timer.schedule(doAsynchronousTask, 0, 1000); //execute in every 50000 ms
     }
 }
